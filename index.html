@@ -297,6 +297,26 @@
 
         const formattedRecap = (ep.episode_recap || '').split('\n').map(p => `<p>${p}</p>`).join('');
 
+        let confQuote = "";
+        let confAuthor = "CASTAWAY";
+        
+        if (ep.confessional) {
+          if (typeof ep.confessional === 'string') {
+            try {
+              // Try to parse if it was saved as a raw string
+              const parsed = JSON.parse(ep.confessional);
+              confQuote = parsed.quote || ep.confessional;
+              confAuthor = parsed.author || "CASTAWAY";
+            } catch (e) {
+              // Fallback if it's just a normal string
+              confQuote = ep.confessional;
+            }
+          } else if (typeof ep.confessional === 'object') {
+            confQuote = ep.confessional.quote;
+            confAuthor = ep.confessional.author;
+          }
+        }
+
         return `
           <div class="card mb-5 shadow-lg border-0 overflow-hidden">
             <div class="card-header bg-black border-bottom border-secondary py-3 d-flex justify-content-between align-items-center">
@@ -393,14 +413,14 @@
              "quote": "Invent a highly realistic, dramatic confessional quote.",
              "author": "Name of the player"
           },
-          "episode_recap": "Write a dramatic, multi-paragraph TV recap (300-500 words). Focus on the storyline, the shifting alliances, and the tension at tribal council. Use \\n\\n for paragraph breaks.",
+          "episode_recap": "Write a dramatic, multi-paragraph TV recap (300-500 words). Focus on the storyline, the shifting alliances, and the tension at tribal council. Use \\n\\n for paragraph breaks. Add emojis and make it visually appealing. ",
           "superlatives": [
             {"award": "The Mastermind", "recipient": "Player/Tribe", "reason": "1-2 sentences."},
             {"award": "The Camp Mess", "recipient": "Player/Tribe", "reason": "1-2 sentences."},
             {"award": "The Silent Assassin", "recipient": "Player/Tribe", "reason": "1-2 sentences."}
           ],
-          "strategic_rating": 8, "entertainment_rating": 8, "production_rating": 8,
-          "chaos_index": 8,
+          "strategic_rating": 1-10, "entertainment_rating": 1-10, "production_rating": 1-10,
+          "chaos_index": 1-10,
           "edgic_ratings": [
             {"player": "Name", "rating": "CP5"}
           ],
